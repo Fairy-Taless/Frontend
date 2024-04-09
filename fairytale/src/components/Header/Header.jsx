@@ -70,7 +70,7 @@ const Header = () => {
             <StyledNavLink to="/">홈</StyledNavLink>
           </LeftSection>
           <RightSection>
-            <StyledNavLink to="/mypage">마이페이지</StyledNavLink>
+            <StyledNavLink to="/profile">마이페이지</StyledNavLink>
             <StyledNavLink to="/login">로그인</StyledNavLink>
             <StyledNavLink to="/signup">회원가입</StyledNavLink>
           </RightSection>
