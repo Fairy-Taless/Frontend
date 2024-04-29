@@ -2,6 +2,19 @@ import Header from '../../components/Header/Header';
 import styled from 'styled-components';
 import Cinderella from '../../assets/images/CinDetail.png';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 13vw; // 상단으로부터의 거리
+  right: 25.5vw; // 오른쪽으로부터의 거리
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5vw;
+  cursor: pointer;
+`;
+
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -92,13 +105,15 @@ const CustomCheckboxContainer = styled.div`
 const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
   opacity: 0;
   position: absolute;
-  width: 0;
-  height: 0;
+  width: 1px; // 수정됨
+  height: 1px; // 수정됨
+  margin: -1px; // 추가됨
+  overflow: hidden; // 추가됨
 `;
 
 const StyledCheckbox = styled.div`
-  width: 20px; // 체크박스 크기 조정
-  height: 20px; // 체크박스 크기 조정
+  width: 20px;
+  height: 20px;
   background: ${(props) => (props.checked ? '#5e81ff' : 'transparent')};
   border-radius: 3px;
   transition: all 150ms;
@@ -108,17 +123,9 @@ const StyledCheckbox = styled.div`
     box-shadow: 0 0 0 3px pink;
   }
 
+  // 체크 표시 제거
   ${HiddenCheckbox}:checked + &::after {
-    content: '';
-    position: absolute;
-    display: block;
-    left: 6px;
-    top: 2px;
-    width: 6px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    transform: rotate(45deg);
+    content: none;
   }
 `;
 
@@ -129,16 +136,31 @@ const ButtonContainer = styled.div`
   padding-right: 1vw;
 `;
 
-const Checkbox = ({ className, checked, ...props }) => (
-  <CustomCheckboxContainer className={className}>
-    <HiddenCheckbox checked={checked} {...props} />
-    <StyledCheckbox checked={checked} />
-  </CustomCheckboxContainer>
-);
-
 const Fairy = () => {
+  const navigate = useNavigate();
   const [voiceChecked, setVoiceChecked] = useState(false);
   const [faceChecked, setFaceChecked] = useState(false);
+  const [image, setImage] = useState(null);
+  const [audioFile, setAudioFile] = useState(null);
+
+  const handleClose = () => {
+    navigate('/');
+  };
+
+  const Checkbox = ({ className, checked, onChange, id, ...props }) => (
+    <CustomCheckboxContainer className={className}>
+      <HiddenCheckbox
+        id={id}
+        checked={checked}
+        onChange={onChange}
+        {...props}
+      />
+      <StyledCheckbox
+        checked={checked}
+        onClick={() => onChange({ target: { checked: !checked, id } })}
+      />
+    </CustomCheckboxContainer>
+  );
 
   const handleCheckboxChange = (e) => {
     if (e.target.id === 'voiceOption') {
@@ -151,23 +173,26 @@ const Fairy = () => {
   const applyOptions = async () => {
     // FormData 객체 생성
     const formData = new FormData();
-    
+
     // FormData 객체에 이미지와 음성 파일 추가
     if (image) formData.append('image', image);
     if (audioFile) formData.append('audio', audioFile);
-    
+
     // FormData 객체에 사용자가 선택한 옵션 추가
-    formData.append('options', JSON.stringify({ voice: voiceChecked, face: faceChecked }));
-    
+    formData.append(
+      'options',
+      JSON.stringify({ voice: voiceChecked, face: faceChecked })
+    );
+
     try {
       const response = await fetch('api', {
         method: 'POST',
         body: formData, // JSON 대신 FormData를 사용
       });
-      
+
       // 서버 응답 확인
       if (!response.ok) throw new Error('Server response was not ok.');
-  
+
       const data = await response.json();
       // 성공적인 응답 처리
       console.log('Success:', data);
@@ -176,13 +201,13 @@ const Fairy = () => {
       console.error('There was an error!', error);
     }
   };
-  
 
   return (
     <>
       <Header />
       <Container>
         <CreatesContainer>
+          <CloseButton onClick={handleClose}>X</CloseButton>
           <img
             src={Cinderella}
             style={{
