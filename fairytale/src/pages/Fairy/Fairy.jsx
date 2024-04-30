@@ -3,6 +3,26 @@ import styled from 'styled-components';
 import Cinderella from '../../assets/images/CinDetail.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LeftButtonImage from '../../assets/images/leftbutton.png';
+import RightButtonImage from '../../assets/images/rightbutton.png';
+
+const LeftButton = styled.img`
+  flex-shrink: 0;
+  width: 3.9vw;
+  height: 3.9vw;
+  position: absolute;
+  left: 23%;
+  top: 61%;
+  transform: translateY(-50%);
+`;
+const RightButton = styled.img`
+  position: absolute;
+  right: 23%;
+  top: 61%;
+  transform: translateY(-50%);
+  width: 3.9vw;
+  height: 3.9vw;
+`;
 
 const CloseButton = styled.button`
   position: absolute;
@@ -147,6 +167,10 @@ const Fairy = () => {
     navigate('/');
   };
 
+  const GoNext = () => {
+    navigate('/ConvertFairy');
+  };
+
   const Checkbox = ({ className, checked, onChange, id, ...props }) => (
     <CustomCheckboxContainer className={className}>
       <HiddenCheckbox
@@ -208,6 +232,7 @@ const Fairy = () => {
       <Container>
         <CreatesContainer>
           <CloseButton onClick={handleClose}>X</CloseButton>
+          {/* <LeftButton src={LeftButtonImage} alt="Left Button" /> */}
           <img
             src={Cinderella}
             style={{
@@ -215,6 +240,11 @@ const Fairy = () => {
               height: '20vw',
               borderRadius: '10px 10px 0 0',
             }}
+          />
+          <RightButton
+            onClick={GoNext}
+            src={RightButtonImage}
+            alt="Right Button"
           />
           <TitleP>신데렐라(Cinderella)</TitleP>
           <TextContainer>
