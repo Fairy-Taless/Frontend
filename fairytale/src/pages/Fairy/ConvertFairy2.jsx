@@ -7,6 +7,7 @@ import LeftButtonImage from '../../assets/images/leftbutton.png';
 import RightButtonImage from '../../assets/images/rightbutton.png';
 import Cinscene1 from '../../assets/images/cinscene1.png';
 import Scriptbg from '../../assets/images/scriptbackgr.png';
+import CinGo from '../../assets/images/CinGo.png';
 
 const LeftButton = styled.img`
   flex-shrink: 0;
@@ -219,7 +220,7 @@ const ScriptP3 = styled.p`
   z-index: 1;
 `;
 
-const ConvertFairy = () => {
+const ConvertFairy2 = () => {
   const navigate = useNavigate();
   const [voiceChecked, setVoiceChecked] = useState(false);
   const [faceChecked, setFaceChecked] = useState(false);
@@ -231,11 +232,7 @@ const ConvertFairy = () => {
   };
 
   const GoBack = () => {
-    navigate('/Fairy');
-  };
-
-  const GoNext = () => {
-    navigate('/ConvertFairy2');
+    navigate('/ConvertFairy');
   };
 
   return (
@@ -250,7 +247,7 @@ const ConvertFairy = () => {
             alt="Left Button"
           />
           <img
-            src={Cinscene1}
+            src={CinGo}
             style={{
               width: '27vw',
               height: '100%',
@@ -268,29 +265,27 @@ const ConvertFairy = () => {
               }}
             />
             <ScriptP>
-              신데렐라는 낡은 오두막집 안을 청소하며 하루를 시작 합니다. 계모와
-              의붓자매들은 아직 깊은 잠에 빠져 있습니다.
+              자정의 종소리가 긴박하게 울려퍼지자, 신데렐라는 급히 무도회장을
+              빠져 나가야 한다는 것을 깨달았습니다. 그녀는 왕자와의 춤을 멈추고,
+              급히 사람들을 해치며 대담하게 달려나갑니다.
             </ScriptP>
             <ScriptP2>
               <br />
-              <br /> 신데렐라는 잠시 일을 멈추고 창가에 기대어, 자신의 반복되는
-              일상에 대해 생각에 잠깁니다.
+              <br />
+              <br /> "아, 안돼, 벌써 자정이라니!... 이 모든 것이 끝나기 전에
+              저는 이만 가봐야해요...정말 미안해요..."
             </ScriptP2>
 
             <ScriptP3>
-              "하… 너무 힘들어. 이런 생활에서 언제쯤 벗어날 수 있을까? 매일 같은
-              일의 반복, 같은 구석진 방… 저 멀리 왕궁의 무도회는 어떤 느낌일까?
-              아마도 나는 그곳이 어떤지 영원히 알지 못할 거야…"
+              <br />
+              발길을 재촉하는 가운데, 신데렐라는 불안하고 초조한 눈빛으로 뒤를
+              한번 돌아보고는 어둠 속으로 사라집니다.
             </ScriptP3>
           </LetterContainer>
-          <RightButton
-            src={RightButtonImage}
-            alt="Right Button"
-            onClick={GoNext}
-          />
+          <RightButton src={RightButtonImage} alt="Right Button" />
         </CreatesContainer>
       </Container>
     </>
   );
 };
-export default ConvertFairy;
+export default ConvertFairy2;

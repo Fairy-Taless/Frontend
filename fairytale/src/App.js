@@ -7,6 +7,7 @@ import Signup from './pages/Login/Signup';
 import Profile from './pages/Login/Profile';
 import Fairy from './pages/Fairy/Fairy';
 import ConvertFairy from './pages/Fairy/ConvertFairy';
+import ConvertFairy2 from './pages/Fairy/ConvertFairy2';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/Profile" element={<Profile />} />
           <Route path="/Fairy" element={<Fairy />} />
           <Route path="ConvertFairy" element={<ConvertFairy />} />
+          <Route path="ConvertFairy2" element={<ConvertFairy2 />} />
         </Routes>
       </Router>
     </>
