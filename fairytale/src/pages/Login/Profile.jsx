@@ -198,17 +198,19 @@ const Profile = () => {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${authToken}`,
-            'Authorization-Refresh': `Bearer ${refreshToken}`,
+            // 'Authorization-Refresh': `Bearer ${refreshToken}`,
           },
           body: formData,
         });
 
         if (response.ok) {
           console.log('Audio upload successful');
-          console.log(response.message);
+          const responseData = await response.text();
+          console.log(responseData);
+
           setAudioSrc(URL.createObjectURL(file));
         } else {
-          const errorText = await response.text(); // JSON이 아니라 텍스트로 응답 받음
+          const errorText = await response.text();
           console.error('Error uploading audio:', errorText);
           alert('Error occurred: ' + errorText);
         }
