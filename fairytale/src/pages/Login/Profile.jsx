@@ -142,12 +142,10 @@ const Profile = () => {
   const [audioName, setAudioName] = useState('음성파일을 여기로 드래그하세요');
 
   useEffect(() => {
-    if (audioFile) {
-      const audioURL = URL.createObjectURL(audioFile);
-      setAudioSrc(audioURL);
-      return () => URL.revokeObjectURL(audioURL);
+    if (audioSrc) {
+      return () => URL.revokeObjectURL(audioSrc);
     }
-  }, [audioFile]);
+  }, [audioSrc]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -183,6 +181,40 @@ const Profile = () => {
     if (file && /audio\/(mp3|wav|m4a)$/.test(file.type)) {
       setAudioFile(file);
       setAudioName(file.name); // 드래그 앤 드롭으로 음성 업로드 시 파일 이름 업데이트
+    }
+  };
+
+  const handleAudioUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('sample', file);
+
+      const authToken = localStorage.getItem('authToken');
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      try {
+        const response = await fetch('http://13.125.16.41:8080/api/voice', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Authorization-Refresh': `Bearer ${refreshToken}`,
+          },
+          body: formData,
+        });
+
+        if (response.ok) {
+          console.log('Audio upload successful');
+          console.log(response.message);
+          setAudioSrc(URL.createObjectURL(file));
+        } else {
+          const errorText = await response.text(); // JSON이 아니라 텍스트로 응답 받음
+          console.error('Error uploading audio:', errorText);
+          alert('Error occurred: ' + errorText);
+        }
+      } catch (error) {
+        console.error('Error uploading audio:', error);
+      }
     }
   };
 
@@ -249,9 +281,10 @@ const Profile = () => {
               <HiddenInput
                 id="audio-upload"
                 type="file"
-                accept="audio/mp3, audio/wav, audio/m4a"
-                onChange={handleAudioChange}
+                accept="audio/mp3, audio/wav, audio/mp4, audio/x-m4a"
+                onChange={handleAudioUpload}
               />
+              {audioSrc && <AudioPreview src={audioSrc} controls />}
             </DragDropContainer>
           </RowContainer2>
         </ProfileContainer>

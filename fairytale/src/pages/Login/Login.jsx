@@ -139,16 +139,28 @@ const Login = () => {
         body: JSON.stringify(requestBody),
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        console.log('Login successful:', data);
-        // 로그인 성공 후 처리 로직
-      } else {
-        throw new Error(data.message || 'Failed to login');
+      if (!response.ok) {
+        throw new Error(`Login failed with status: ${response.status}`);
       }
+
+      const contentType = response.headers.get('Content-Type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Invalid content type received from server');
+      }
+
+      const data = await response.json();
+      console.log('Login successful:', data);
+
+      const authToken = response.headers.get('authorization');
+      const refreshToken = response.headers.get('authorization-refresh');
+
+      console.log('Auth Token:', authToken);
+      console.log('Refresh Token:', refreshToken);
+
+      localStorage.setItem('authToken', authToken);
+      localStorage.setItem('refreshToken', refreshToken);
     } catch (error) {
-      console.error('Login error:', error);
-      // 에러 처리 로직
+      console.error('Error during login:', error.message);
     }
   };
 

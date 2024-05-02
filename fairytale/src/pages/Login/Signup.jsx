@@ -61,7 +61,8 @@ const RadioButton = styled.input.attrs({ type: 'radio' })`
 `;
 
 const RadioButtonLabel = styled.label`
-  margin-right: 2vw;
+  font-size: 1.2vw;
+  white-space: nowrap;
 `;
 
 const ButtonContainer = styled.div`
@@ -86,6 +87,12 @@ const SubmitButton = styled.button`
   font-weight: 600;
   line-height: 1.2vw;
   cursor: pointer;
+`;
+
+const AllFieldContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const Signup = () => {
@@ -128,45 +135,47 @@ const Signup = () => {
       <Container>
         <SignupContainer>
           <SignupText>Sign Up</SignupText>
-          <FieldContainer>
-            <Text>아이디</Text>
-            <IdField
-              value={loginId}
-              onChange={(e) => setLoginId(e.target.value)}
-            />
-          </FieldContainer>
-          <FieldContainer>
-            <Text>비밀번호</Text>
-            <IdField
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </FieldContainer>
-          <FieldContainer>
-            <Text>닉네임</Text>
-            <IdField
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </FieldContainer>
-          <FieldContainer>
-            <Text>성별</Text>
-            <RadioButton
-              name="gender"
-              value="MALE"
-              checked={gender === 'MALE'}
-              onChange={() => setGender('MALE')}
-            />
-            <RadioButtonLabel>남성</RadioButtonLabel>
-            <RadioButton
-              name="gender"
-              value="FEMALE"
-              checked={gender === 'FEMALE'}
-              onChange={() => setGender('FEMALE')}
-            />
-            <RadioButtonLabel>여성</RadioButtonLabel>
-          </FieldContainer>
+          <AllFieldContainer>
+            <FieldContainer>
+              <Text>아이디</Text>
+              <IdField
+                value={loginId}
+                onChange={(e) => setLoginId(e.target.value)}
+              />
+            </FieldContainer>
+            <FieldContainer>
+              <Text>비밀번호</Text>
+              <IdField
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </FieldContainer>
+            <FieldContainer>
+              <Text>닉네임</Text>
+              <IdField
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </FieldContainer>
+            <FieldContainer>
+              <Text>성별</Text>
+              <RadioButton
+                name="gender"
+                value="MALE"
+                checked={gender === 'MALE'}
+                onChange={() => setGender('MALE')}
+              />
+              <RadioButtonLabel>남성</RadioButtonLabel>
+              <RadioButton
+                name="gender"
+                value="FEMALE"
+                checked={gender === 'FEMALE'}
+                onChange={() => setGender('FEMALE')}
+              />
+              <RadioButtonLabel>여성</RadioButtonLabel>
+            </FieldContainer>
+          </AllFieldContainer>
           <ButtonContainer>
             <SubmitButton onClick={handleSignup}>가입하기</SubmitButton>
           </ButtonContainer>
