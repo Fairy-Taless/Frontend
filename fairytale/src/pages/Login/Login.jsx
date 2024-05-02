@@ -1,6 +1,7 @@
 import Header from '../../components/Header/Header';
 import styled from 'styled-components';
 // import kakao from '../../assets/images/kakao.png';
+import { useState } from 'react';
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -120,6 +121,37 @@ const SimpleText = styled.p`
   line-height: normal;
 `;
 const Login = () => {
+  const [loginId, setLoginId] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    const requestBody = {
+      loginId,
+      password,
+    };
+
+    try {
+      const response = await fetch('http://13.125.16.41:8080/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Login successful:', data);
+        // 로그인 성공 후 처리 로직
+      } else {
+        throw new Error(data.message || 'Failed to login');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      // 에러 처리 로직
+    }
+  };
+
   return (
     <>
       <Header />
@@ -127,11 +159,19 @@ const Login = () => {
         <LoginContainer>
           <LoginText>Login</LoginText>
           <InputContainer>
-            <InputField placeholder="아이디를 입력해주세요"></InputField>
-            <InputField placeholder="비밀번호를 입력해주세요"></InputField>
+            <InputField
+              placeholder="아이디를 입력해주세요"
+              value={loginId}
+              onChange={(e) => setLoginId(e.target.value)}
+            />
+            <InputField
+              type="password"
+              placeholder="비밀번호를 입력해주세요"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </InputContainer>
-          <LoginBtn>로그인하기</LoginBtn>
-          <JoinBtn>회원가입하기</JoinBtn>
+          <LoginBtn onClick={handleLogin}>로그인하기</LoginBtn>
         </LoginContainer>
       </Container>
     </>

@@ -7,7 +7,7 @@ import LeftButtonImage from '../../assets/images/leftbutton.png';
 import RightButtonImage from '../../assets/images/rightbutton.png';
 import Cinscene1 from '../../assets/images/cinscene1.png';
 import Scriptbg from '../../assets/images/scriptbackgr.png';
-
+import MaDong from '../../assets/images/madong.jpg';
 const LeftButton = styled.img`
   flex-shrink: 0;
   width: 3.9vw;
@@ -250,7 +250,7 @@ const ConvertFairy = () => {
             alt="Left Button"
           />
           <img
-            src={Cinscene1}
+            src={MaDong}
             style={{
               width: '27vw',
               height: '100%',
