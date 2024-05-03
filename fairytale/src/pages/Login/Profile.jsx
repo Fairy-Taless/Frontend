@@ -191,10 +191,10 @@ const Profile = () => {
           'http://13.125.16.41:8080/faceSwap/uploadImg',
           {
             method: 'POST',
-            // headers: {
-            //   Authorization: `Bearer ${authToken}`,
-            //   // 'Authorization-Refresh': `Bearer ${refreshToken}`,
-            // },
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              // 'Authorization-Refresh': `Bearer ${refreshToken}`,
+            },
             body: formData,
           }
         );
