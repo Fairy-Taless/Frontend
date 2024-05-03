@@ -250,7 +250,7 @@ const ConvertFairy = () => {
             alt="Left Button"
           />
           <img
-            src={MaDong}
+            src={Cinscene1}
             style={{
               width: '27vw',
               height: '100%',

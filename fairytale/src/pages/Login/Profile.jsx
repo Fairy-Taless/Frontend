@@ -147,24 +147,6 @@ const Profile = () => {
     }
   }, [audioSrc]);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-      setImage(file);
-      setPreview(URL.createObjectURL(file));
-      setImageName(file.name); // 이미지 파일 이름 업데이트
-    }
-  };
-
-  const handleAudioChange = (e) => {
-    const file = e.target.files[0];
-    if (file && /audio\/(mp3|wav|m4a)$/.test(file.type)) {
-      setAudioFile(file);
-      setAudioSrc(URL.createObjectURL(file)); // Update the source for audio preview
-      setAudioName(file.name); // Update the audio file name
-    }
-  };
-
   const handleDragOver = (e) => e.preventDefault();
   const handleDropImage = (e) => {
     e.preventDefault();
@@ -182,6 +164,52 @@ const Profile = () => {
       setAudioFile(file);
       setAudioSrc(URL.createObjectURL(file)); // Update the source for audio preview
       setAudioName(file.name); // Update the audio file name
+    }
+  };
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setImage(file);
+      setPreview(URL.createObjectURL(file));
+      setImageName(file.name);
+    }
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setPreview(URL.createObjectURL(file));
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const authToken = localStorage.getItem('authToken');
+
+      try {
+        const response = await fetch(
+          'http://13.125.16.41:8080/faceSwap/uploadImg',
+          {
+            method: 'POST',
+            // headers: {
+            //   Authorization: `Bearer ${authToken}`,
+            //   // 'Authorization-Refresh': `Bearer ${refreshToken}`,
+            // },
+            body: formData,
+          }
+        );
+        if (response.ok) {
+          console.log('Image upload successful');
+          const responseData = await response.text();
+          console.log(responseData);
+        } else {
+          const errorText = await response.text();
+          console.error('Error uploading image:', errorText);
+          alert('Error occurred: ' + errorText);
+        }
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
     }
   };
 
@@ -254,7 +282,7 @@ const Profile = () => {
                 id="image-upload"
                 type="file"
                 accept="image/jpeg, image/jpg"
-                onChange={handleImageChange}
+                onChange={handleImageUpload}
               />
             </DragDropContainer>
           </RowContainer>
