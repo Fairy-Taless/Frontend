@@ -160,7 +160,8 @@ const Profile = () => {
     const file = e.target.files[0];
     if (file && /audio\/(mp3|wav|m4a)$/.test(file.type)) {
       setAudioFile(file);
-      setAudioName(file.name); // 음성 파일 이름 업데이트
+      setAudioSrc(URL.createObjectURL(file)); // Update the source for audio preview
+      setAudioName(file.name); // Update the audio file name
     }
   };
 
@@ -174,13 +175,13 @@ const Profile = () => {
       setImageName(file.name); // 드래그 앤 드롭으로 이미지 업로드 시 파일 이름 업데이트
     }
   };
-
   const handleDropAudio = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     if (file && /audio\/(mp3|wav|m4a)$/.test(file.type)) {
       setAudioFile(file);
-      setAudioName(file.name); // 드래그 앤 드롭으로 음성 업로드 시 파일 이름 업데이트
+      setAudioSrc(URL.createObjectURL(file)); // Update the source for audio preview
+      setAudioName(file.name); // Update the audio file name
     }
   };
 
@@ -209,6 +210,7 @@ const Profile = () => {
           console.log(responseData);
 
           setAudioSrc(URL.createObjectURL(file));
+          setAudioName(file.name);
         } else {
           const errorText = await response.text();
           console.error('Error uploading audio:', errorText);
@@ -286,7 +288,6 @@ const Profile = () => {
                 accept="audio/mp3, audio/wav, audio/mp4, audio/x-m4a"
                 onChange={handleAudioUpload}
               />
-              {audioSrc && <AudioPreview src={audioSrc} controls />}
             </DragDropContainer>
           </RowContainer2>
         </ProfileContainer>
