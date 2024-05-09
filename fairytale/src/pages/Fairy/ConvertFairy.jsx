@@ -12,6 +12,7 @@ import { useLocation } from 'react-router-dom';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import React from 'react';
+import { useData } from '../DataContext/DataContext';
 
 const LeftButton = styled.img`
   flex-shrink: 0;
@@ -248,6 +249,7 @@ const ConvertFairy = () => {
   console.log('Image URL:', imageUrl);
 
   const navigate = useNavigate();
+  const { setApiResponse } = useData();
 
   const audioRef = useRef(null);
   const audioRef2 = useRef(null);
@@ -264,6 +266,17 @@ const ConvertFairy = () => {
       (_, i) => audioRefs.current[i] || React.createRef()
     );
   }, [audioUrls]);
+
+  useEffect(() => {
+    console.log('Location state at ConvertFairy:', location.state); // location.state 로깅
+    if (location.state && location.state.apiResponse) {
+      console.log('Data received in ConvertFairy:', location.state.apiResponse); // 받은 데이터 로깅
+      setApiResponse(location.state.apiResponse); // Context에 데이터 저장
+      console.log('Data has been set in DataContext');
+    } else {
+      console.error('No data received in ConvertFairy');
+    }
+  }, [location, setApiResponse]);
 
   const handlePlayAudio = (index) => {
     const audioEl = audioRefs.current[index];
@@ -291,7 +304,7 @@ const ConvertFairy = () => {
   };
 
   const GoNext = () => {
-    navigate('/ConvertFairy2');
+    navigate('/ConvertFairy2', { state: { apiResponse: data } });
   };
 
   console.log(imageUrl);

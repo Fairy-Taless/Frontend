@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LeftButtonImage from '../../assets/images/leftbutton.png';
 import RightButtonImage from '../../assets/images/rightbutton.png';
-
+import { useData } from '../DataContext/DataContext';
+import { useEffect } from 'react';
 const LeftButton = styled.img`
   flex-shrink: 0;
   width: 3.9vw;
@@ -162,6 +163,18 @@ const Fairy = () => {
   const [faceChecked, setFaceChecked] = useState(false);
   const [image, setImage] = useState(null);
   const [audioFile, setAudioFile] = useState(null);
+
+  const { setData } = useData();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('your-api-url');
+      const jsonData = await response.json();
+      setData(jsonData); // Context에 데이터 저장
+    };
+
+    fetchData();
+  }, [setData]);
 
   const handleClose = () => {
     navigate('/');

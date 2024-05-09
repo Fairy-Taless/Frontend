@@ -8,6 +8,11 @@ import RightButtonImage from '../../assets/images/rightbutton.png';
 import Cinscene1 from '../../assets/images/cinscene1.png';
 import Scriptbg from '../../assets/images/scriptbackgr.png';
 import CinGo from '../../assets/images/CinGo.png';
+import { useLocation } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import React from 'react';
+import { createContext, useContext } from 'react';
+import { useData } from '../DataContext/DataContext';
 
 const LeftButton = styled.img`
   flex-shrink: 0;
@@ -222,10 +227,19 @@ const ScriptP3 = styled.p`
 
 const ConvertFairy2 = () => {
   const navigate = useNavigate();
-  const [voiceChecked, setVoiceChecked] = useState(false);
-  const [faceChecked, setFaceChecked] = useState(false);
-  const [image, setImage] = useState(null);
-  const [audioFile, setAudioFile] = useState(null);
+
+  const { apiResponse } = useData(); // Using the context to access data
+
+  const audioRefs = useRef([]);
+
+  useEffect(() => {
+    if (!apiResponse) {
+      console.error('No data received from context');
+      // Additional error handling can be implemented here
+      return;
+    }
+    console.log('Received data from context:', apiResponse);
+  }, [apiResponse]);
 
   const handleClose = () => {
     navigate('/');
