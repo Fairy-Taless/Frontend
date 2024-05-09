@@ -167,8 +167,8 @@ const Fairy = () => {
     navigate('/');
   };
 
-  const GoNext = () => {
-    navigate('/ConvertFairy');
+  const GoNext = (data) => {
+    navigate('/ConvertFairy', { state: { apiResponse: data } });
   };
 
   const Checkbox = ({ className, checked, onChange, id, ...props }) => (
@@ -195,34 +195,34 @@ const Fairy = () => {
   };
 
   const applyOptions = async () => {
-    // FormData 객체 생성
-    const formData = new FormData();
+    const authToken = localStorage.getItem('authToken');
 
-    // FormData 객체에 이미지와 음성 파일 추가
-    if (image) formData.append('image', image);
-    if (audioFile) formData.append('audio', audioFile);
+    const queryParams = new URLSearchParams({
+      change_voice: voiceChecked,
+      change_face: faceChecked,
+    }).toString();
 
-    // FormData 객체에 사용자가 선택한 옵션 추가
-    formData.append(
-      'options',
-      JSON.stringify({ voice: voiceChecked, face: faceChecked })
-    );
+    const url = `http://13.125.16.41:8080/api/fairytale/1?${queryParams}`;
+
+    console.log('voiceChecked: ', voiceChecked);
+    console.log('faceChecked:', faceChecked);
 
     try {
-      const response = await fetch('api', {
-        method: 'POST',
-        body: formData, // JSON 대신 FormData를 사용
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
       });
 
-      // 서버 응답 확인
       if (!response.ok) throw new Error('Server response was not ok.');
-
       const data = await response.json();
-      // 성공적인 응답 처리
       console.log('Success:', data);
+      alert('성공적으로 적용되었습니다!');
+      GoNext(data);
     } catch (error) {
-      // 오류 처리
       console.error('There was an error!', error);
+      alert('오류가 발생했습니다: ' + error.message);
     }
   };
 

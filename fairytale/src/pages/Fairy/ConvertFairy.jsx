@@ -2,12 +2,17 @@ import Header from '../../components/Header/Header';
 import styled from 'styled-components';
 import Cinderella from '../../assets/images/CinDetail.png';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import LeftButtonImage from '../../assets/images/leftbutton.png';
 import RightButtonImage from '../../assets/images/rightbutton.png';
 import Cinscene1 from '../../assets/images/cinscene1.png';
 import Scriptbg from '../../assets/images/scriptbackgr.png';
 import MaDong from '../../assets/images/madong.jpg';
+import { useLocation } from 'react-router-dom';
+import { useRef } from 'react';
+import { useEffect } from 'react';
+import React from 'react';
+
 const LeftButton = styled.img`
   flex-shrink: 0;
   width: 3.9vw;
@@ -183,11 +188,18 @@ const ScriptP = styled.p`
   font-size: 1.3vw;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.5vw;
+  line-height: 2vw;
   z-index: 1;
 `;
 
+const TextSpan = styled.span`
+  cursor: pointer;
+  color: ${(props) => (props.isPlaying ? 'yellow' : 'black')}; // 조건부 스타일
+`;
+
 const ScriptP2 = styled.p`
+  cursor: pointer;
+  color: ${(props) => (props.isPlaying ? 'yellow' : 'black')}; // 조건부 스타일
   margin-left: 2.5vw;
   margin-right: 2.5vw;
   position: absolute;
@@ -199,7 +211,7 @@ const ScriptP2 = styled.p`
   font-size: 1.3vw;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.5vw;
+  line-height: 2vw;
   z-index: 1;
 `;
 
@@ -215,16 +227,60 @@ const ScriptP3 = styled.p`
   font-size: 1.3vw;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.5vw;
+  line-height: 2vw;
   z-index: 1;
 `;
 
 const ConvertFairy = () => {
+  const location = useLocation();
+  const data = location.state.apiResponse;
+  const audioRefs = useRef([]);
+
+  const [playingIndex, setPlayingIndex] = useState(null);
+
+  // const audioUrl = data.result['1'].voice_list['0'].audioUrl;
+  // const audioUrl2 = data.result['1'].voice_list['1'].audioUrl;
+
+  const audioUrls = data.result['1'].voice_list.map((item) => item.audioUrl);
+  const imageUrl = data.result['1'].image_url;
+
+  console.log('Data:', data);
+  console.log('Image URL:', imageUrl);
+
   const navigate = useNavigate();
-  const [voiceChecked, setVoiceChecked] = useState(false);
-  const [faceChecked, setFaceChecked] = useState(false);
-  const [image, setImage] = useState(null);
-  const [audioFile, setAudioFile] = useState(null);
+
+  const audioRef = useRef(null);
+  const audioRef2 = useRef(null);
+  const audioRef3 = useRef(null);
+  const audioRef4 = useRef(null);
+  const audioRef5 = useRef(null);
+  const audioRef6 = useRef(null);
+  const audioRef7 = useRef(null);
+  const audioRef8 = useRef(null);
+
+  useEffect(() => {
+    // 오디오 참조 배열 초기화
+    audioRefs.current = audioUrls.map(
+      (_, i) => audioRefs.current[i] || React.createRef()
+    );
+  }, [audioUrls]);
+
+  const handlePlayAudio = (index) => {
+    const audioEl = audioRefs.current[index];
+    setPlayingIndex(index); // 현재 재생 중인 대사의 인덱스 업데이트
+    if (audioEl && audioEl.current) {
+      audioEl.current
+        .play()
+        .then(() => {
+          audioEl.current.onended = () => {
+            setPlayingIndex(null); // 오디오 재생이 끝나면 상태를 초기화
+          };
+        })
+        .catch((error) =>
+          console.error(`Failed to play the audio ${index}:`, error)
+        );
+    }
+  };
 
   const handleClose = () => {
     navigate('/');
@@ -238,6 +294,8 @@ const ConvertFairy = () => {
     navigate('/ConvertFairy2');
   };
 
+  console.log(imageUrl);
+
   return (
     <>
       <Header />
@@ -250,7 +308,7 @@ const ConvertFairy = () => {
             alt="Left Button"
           />
           <img
-            src={Cinscene1}
+            src={imageUrl}
             style={{
               width: '27vw',
               height: '100%',
@@ -258,6 +316,15 @@ const ConvertFairy = () => {
             }}
           />
 
+          {audioUrls.map((url, index) => (
+            <audio
+              key={index}
+              ref={audioRefs.current[index]}
+              src={url}
+              preload="auto"
+              hidden
+            />
+          ))}
           <LetterContainer>
             <img
               src={Scriptbg}
@@ -268,19 +335,62 @@ const ConvertFairy = () => {
               }}
             />
             <ScriptP>
-              신데렐라는 낡은 오두막집 안을 청소하며 하루를 시작 합니다. 계모와
-              의붓자매들은 아직 깊은 잠에 빠져 있습니다.
+              <TextSpan
+                onClick={() => handlePlayAudio(0)}
+                isPlaying={playingIndex === 0}
+              >
+                신데렐라는 낡은 오두막집 안을 청소하며 하루를 시작 합니다.&nbsp;
+              </TextSpan>
+              <TextSpan
+                onClick={() => handlePlayAudio(1)}
+                isPlaying={playingIndex === 1}
+              >
+                계모와 의붓 자매들은 아직 깊은 잠에 빠져 있습니다.
+              </TextSpan>
             </ScriptP>
+
             <ScriptP2>
-              <br />
-              <br /> 신데렐라는 잠시 일을 멈추고 창가에 기대어, 자신의 반복되는
-              일상에 대해 생각에 잠깁니다.
+              <TextSpan
+                onClick={() => handlePlayAudio(2)}
+                isPlaying={playingIndex === 2}
+              >
+                <br />
+                <br /> 신데렐라는 잠시 일을 멈추고 창가에 기대어, 자신의
+                반복되는 일상에 대해 생각에 잠깁니다.
+              </TextSpan>
             </ScriptP2>
 
             <ScriptP3>
-              "하… 너무 힘들어. 이런 생활에서 언제쯤 벗어날 수 있을까? 매일 같은
-              일의 반복, 같은 구석진 방… 저 멀리 왕궁의 무도회는 어떤 느낌일까?
-              아마도 나는 그곳이 어떤지 영원히 알지 못할 거야…"
+              <TextSpan
+                onClick={() => handlePlayAudio(3)}
+                isPlaying={playingIndex === 3}
+              >
+                "하 너무 힘들어. &nbsp;
+              </TextSpan>
+              <TextSpan
+                onClick={() => handlePlayAudio(4)}
+                isPlaying={playingIndex === 4}
+              >
+                이런 생활에서 언제쯤 벗어날 수 있을까? &nbsp;
+              </TextSpan>
+              <TextSpan
+                onClick={() => handlePlayAudio(5)}
+                isPlaying={playingIndex === 5}
+              >
+                매일 같은 일의 반복, 같은 구석진 방…
+              </TextSpan>
+              <TextSpan
+                onClick={() => handlePlayAudio(6)}
+                isPlaying={playingIndex === 6}
+              >
+                저 멀리 왕궁의 무도회는 어떤 느낌일까?&nbsp;
+              </TextSpan>
+              <TextSpan
+                onClick={() => handlePlayAudio(7)}
+                isPlaying={playingIndex === 7}
+              >
+                아마도 나는 그곳이 어떤지 영원히 알지 못할 거야…"
+              </TextSpan>
             </ScriptP3>
           </LetterContainer>
           <RightButton

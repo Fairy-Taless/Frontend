@@ -2,6 +2,8 @@ import Header from '../../components/Header/Header';
 import styled from 'styled-components';
 // import kakao from '../../assets/images/kakao.png';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -124,6 +126,8 @@ const Login = () => {
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
     const requestBody = {
       loginId,
@@ -150,6 +154,7 @@ const Login = () => {
 
       const data = await response.json();
       console.log('Login successful:', data);
+      navigate('/');
 
       const authToken = response.headers.get('authorization');
       const refreshToken = response.headers.get('authorization-refresh');
