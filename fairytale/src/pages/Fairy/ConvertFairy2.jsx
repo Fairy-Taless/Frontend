@@ -189,7 +189,7 @@ const ScriptP = styled.p`
   font-size: 1.3vw;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.5vw;
+  line-height: 2vw;
   z-index: 1;
 `;
 
@@ -205,13 +205,14 @@ const ScriptP2 = styled.p`
   font-size: 1.3vw;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.5vw;
+  line-height: 2vw;
   z-index: 1;
 `;
 
 const ScriptP3 = styled.p`
   margin-left: 2.5vw;
   margin-right: 2.5vw;
+  margin-top: 2vw;
   position: absolute;
   top: 20vw;
   left: 0;
@@ -221,11 +222,18 @@ const ScriptP3 = styled.p`
   font-size: 1.3vw;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.5vw;
+  line-height: 2vw;
   z-index: 1;
 `;
 
+const TextSpan = styled.span`
+  cursor: pointer;
+  color: ${(props) => (props.isPlaying ? 'yellow' : 'black')}; // 조건부 스타일
+`;
+
 const ConvertFairy2 = () => {
+  const [playingIndex, setPlayingIndex] = useState(null);
+
   const navigate = useNavigate();
 
   const { apiResponse } = useData(); // Using the context to access data
@@ -240,6 +248,44 @@ const ConvertFairy2 = () => {
     }
     console.log('Received data from context:', apiResponse);
   }, [apiResponse]);
+
+  const imageUrl = apiResponse.result['2'].image_url;
+  const audioUrls = apiResponse.result['2'].voice_list.map(
+    (item) => item.audioUrl
+  );
+
+  useEffect(() => {
+    console.log('오디오 URL:', audioUrls);
+    audioRefs.current = audioUrls.map(
+      (_, i) => audioRefs.current[i] || React.createRef()
+    );
+    console.log(
+      'Audio refs initialized:',
+      audioRefs.current.map((ref) => ref.current)
+    );
+  }, [audioUrls]);
+
+  const handlePlayAudio = (index) => {
+    console.log(`handlePlayAudio called with index: ${index}`);
+    const audioEl = audioRefs.current[index];
+    setPlayingIndex(index);
+    if (audioEl && audioEl.current) {
+      audioEl.current
+        .play()
+        .then(() => {
+          console.log(`Playing audio at index: ${index}`);
+          audioEl.current.onended = () => {
+            setPlayingIndex(null);
+            console.log(`Audio playback finished at index: ${index}`);
+          };
+        })
+        .catch((error) => {
+          console.error(`Failed to play the audio at index ${index}:`, error);
+        });
+    } else {
+      console.error(`Audio element not found or not loaded at index: ${index}`);
+    }
+  };
 
   const handleClose = () => {
     navigate('/');
@@ -261,13 +307,23 @@ const ConvertFairy2 = () => {
             alt="Left Button"
           />
           <img
-            src={CinGo}
+            src={imageUrl}
             style={{
               width: '27vw',
               height: '100%',
               borderRadius: '10px 0px 0px 10px',
             }}
           />
+
+          {audioUrls.map((url, index) => (
+            <audio
+              key={index}
+              ref={audioRefs.current[index]}
+              src={url}
+              preload="auto"
+              hidden
+            />
+          ))}
 
           <LetterContainer>
             <img
@@ -279,21 +335,54 @@ const ConvertFairy2 = () => {
               }}
             />
             <ScriptP>
-              자정의 종소리가 긴박하게 울려퍼지자, 신데렐라는 급히 무도회장을
-              빠져 나가야 한다는 것을 깨달았습니다. 그녀는 왕자와의 춤을 멈추고,
-              급히 사람들을 해치며 대담하게 달려나갑니다.
+              <TextSpan
+                onClick={() => handlePlayAudio(0)}
+                isPlaying={playingIndex === 0}
+              >
+                자정의 종소리가 긴박하게 울려퍼지자, 신데렐라는 급히 무도회장을
+                빠져 나가야 한다는 것을 깨달았습니다. &nbsp;
+                <br />
+              </TextSpan>
             </ScriptP>
+
             <ScriptP2>
               <br />
+
+              <TextSpan
+                onClick={() => handlePlayAudio(1)}
+                isPlaying={playingIndex === 1}
+              >
+                그녀는 왕자와의 춤을 멈추고, 급히 사람들을 해치며 대담하게
+                달려나갑니다.
+              </TextSpan>
               <br />
-              <br /> "아, 안돼, 벌써 자정이라니!... 이 모든 것이 끝나기 전에
-              저는 이만 가봐야해요...정말 미안해요..."
+              <br />
+              <TextSpan
+                onClick={() => handlePlayAudio(2)}
+                isPlaying={playingIndex === 2}
+              >
+                "아, 안돼, 벌써 자정이라니!...
+              </TextSpan>
+
+              <TextSpan
+                onClick={() => handlePlayAudio(3)}
+                isPlaying={playingIndex === 3}
+              >
+                이 모든 것이 끝나기 전에 저는 이만 가봐야해요...정말
+                미안해요..."
+              </TextSpan>
             </ScriptP2>
 
             <ScriptP3>
               <br />
-              발길을 재촉하는 가운데, 신데렐라는 불안하고 초조한 눈빛으로 뒤를
-              한번 돌아보고는 어둠 속으로 사라집니다.
+              <br />
+              <TextSpan
+                onClick={() => handlePlayAudio(4)}
+                isPlaying={playingIndex === 4}
+              >
+                발길을 재촉하는 가운데, 신데렐라는 불안하고 초조한 눈빛으로 뒤를
+                한번 돌아보고는 어둠 속으로 사라집니다.
+              </TextSpan>
             </ScriptP3>
           </LetterContainer>
           <RightButton src={RightButtonImage} alt="Right Button" />

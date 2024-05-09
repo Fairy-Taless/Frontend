@@ -239,9 +239,6 @@ const ConvertFairy = () => {
 
   const [playingIndex, setPlayingIndex] = useState(null);
 
-  // const audioUrl = data.result['1'].voice_list['0'].audioUrl;
-  // const audioUrl2 = data.result['1'].voice_list['1'].audioUrl;
-
   const audioUrls = data.result['1'].voice_list.map((item) => item.audioUrl);
   const imageUrl = data.result['1'].image_url;
 
@@ -250,15 +247,6 @@ const ConvertFairy = () => {
 
   const navigate = useNavigate();
   const { setApiResponse } = useData();
-
-  const audioRef = useRef(null);
-  const audioRef2 = useRef(null);
-  const audioRef3 = useRef(null);
-  const audioRef4 = useRef(null);
-  const audioRef5 = useRef(null);
-  const audioRef6 = useRef(null);
-  const audioRef7 = useRef(null);
-  const audioRef8 = useRef(null);
 
   useEffect(() => {
     // 오디오 참조 배열 초기화
