@@ -243,11 +243,11 @@ const ConvertFairy2 = () => {
   useEffect(() => {
     if (!apiResponse) {
       console.error('No data received from context');
-      // Additional error handling can be implemented here
+      navigate('/Fairy'); // 데이터가 없을 경우 사용자를 안전하게 다른 페이지로 리디렉션
       return;
     }
     console.log('Received data from context:', apiResponse);
-  }, [apiResponse]);
+  }, [apiResponse, navigate]);
 
   const imageUrl = apiResponse.result['2'].image_url;
   const audioUrls = apiResponse.result['2'].voice_list.map(
@@ -292,7 +292,7 @@ const ConvertFairy2 = () => {
   };
 
   const GoBack = () => {
-    navigate('/ConvertFairy');
+    navigate('/ConvertFairy', { state: { apiResponse: apiResponse } });
   };
 
   return (
