@@ -243,7 +243,7 @@ const ConvertFairy2 = () => {
   useEffect(() => {
     if (!apiResponse) {
       console.error('No data received from context');
-      navigate('/Fairy'); // 데이터가 없을 경우 사용자를 안전하게 다른 페이지로 리디렉션
+      navigate('/Fairy'); 
       return;
     }
     console.log('Received data from context:', apiResponse);
