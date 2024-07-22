@@ -128,7 +128,7 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+ const handleLogin = async () => {
     const requestBody = {
       loginId,
       password,
@@ -151,7 +151,7 @@ const Login = () => {
       if (!contentType || !contentType.includes('application/json')) {
         throw new Error('Invalid content type received from server');
       }
-
+ 
       const data = await response.json();
       console.log('Login successful:', data);
       navigate('/');
